@@ -6,6 +6,8 @@ import os
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 RSS_URL = "https://www.reddit.com/r/gamedeals/new/.rss"
 
+sent_posts = set()
+
 def send(title, url):
     data = {
         "content": f"**{title}**\n{url}"
@@ -16,5 +18,8 @@ def send(title, url):
 while True:
     feed = feedparser.parse(RSS_URL)
     for entry in feed.entries:
-        send(entry.title, entry.link)
+        post_id = entry.id
+        if post_id not in sent_posts:
+            send(entry.title, entry.link)
+            sent_posts.add(post_id)
         time.sleep(500)
