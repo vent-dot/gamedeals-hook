@@ -2,7 +2,7 @@ import requests
 import time
 import feedparser
 
-WEBHOOK_URL = "https://discord.com/api/webhooks/1403813620894142494/3vQUnlo2_hAhlkovMef98-XsOIrCiA9bRgM9aMuuiTl-nKVl177MyFkloF5_XpGLtIfT"
+WEBHOOK_URL = ""
 RSS_URL = "https://www.reddit.com/r/gamedeals/new/.rss"
 
 def send(title, url):
