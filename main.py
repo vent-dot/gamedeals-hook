@@ -2,7 +2,7 @@ import requests
 import time
 import feedparser
 
-WEBHOOK_URL = ""
+WEBHOOK_URL = "URL"
 RSS_URL = "https://www.reddit.com/r/gamedeals/new/.rss"
 
 def send(title, url):
