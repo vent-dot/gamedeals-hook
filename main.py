@@ -9,28 +9,23 @@ RSS_URL = "https://www.reddit.com/r/gamedeals/new/.rss"
 sent_posts = set()
 
 def send(title, url):
-    data = {
-        "content": f"**{title}**\n{url}"
-    }
-
-    response = requests.post(WEBHOOK_URL, json=data)
-    if response.status_code == 429:  # Rate limited
-        retry_after = response.json().get('retry_after', 5)
-        print(f"Rate limited, retrying after {retry_after} seconds")
-        time.sleep(retry_after)
+    content = f"**[{title}]({url})**\n{url}"
+    data = {"content": content}
+    r = requests.post(WEBHOOK_URL, json=data)
+    if r.status_code == 429:
+        retry = r.json().get('retry_after', 5)
+        time.sleep(retry)
         return send(title, url)
-    elif response.status_code != 204:
-        print(f"Failed to send webhook: {response.status_code} {response.text}")
+    elif r.status_code != 204:
+        print(f"Webhook error {r.status_code}: {r.text}")
     else:
         print(f"Sent: {title}")
 
 while True:
     feed = feedparser.parse(RSS_URL)
-    for entry in feed.entries:
-        post_id = entry.id
-        if post_id not in sent_posts:
+    for entry in reversed(feed.entries):
+        if entry.id not in sent_posts:
             send(entry.title, entry.link)
-            sent_posts.add(post_id)
-            time.sleep(1)  # small delay between webhook messages
-    print("Sleeping for 300 seconds before next fetch...")
-    time.sleep(300)  # 5 minutes delay between RSS fetches
+            sent_posts.add(entry.id)
+            time.sleep(1)
+    time.sleep(300)
