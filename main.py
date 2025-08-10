@@ -9,7 +9,7 @@ RSS_URL = "https://www.reddit.com/r/gamedeals/new/.rss"
 sent_posts = set()
 
 def send(title, content, url):
-    message = f"Title: {title}\n\n{content}\n\nLink: {url}"
+    message = f"{title} {url}"
     data = {"content": message}
     r = requests.post(WEBHOOK_URL, json=data)
     if r.status_code == 429:
